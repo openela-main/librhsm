@@ -1,9 +1,9 @@
 Name:           librhsm
 Version:        0.0.3
-Release:        7%{?dist}
+Release:        7%{?dist}.1
 Summary:        Red Hat Subscription Manager library
 
-License:        LGPLv2.1+
+License:        LGPLv2+
 URL:            https://github.com/rpm-software-management/librhsm
 Source:         %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 
@@ -12,6 +12,7 @@ Patch0001:      0001-Replace-bool-option-with-int-to-generate-repo-files.patch
 Patch0002:      0002-Generate-repofile-for-any-architecture-if-ALL-is-spe.patch
 Patch0003:      0003-Enable-repos-when-generating-a-.repo-file-based-on-e.patch
 Patch0004:      0004-Append-ctx_baseurl-prefix-to-gpg_url-RhBug-1708628.patch
+Patch0005:      0005-Fix-relocating-certificate-paths-to-etc-rhsm-host.patch
 
 BuildRequires:  meson >= 0.37.0
 BuildRequires:  gcc
@@ -52,6 +53,10 @@ Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Nov 21 2023 Petr Pisar <ppisar@redhat.com> - 0.0.3-7.1
+- Correct a License tag to LGPLv2+ (RHEL-21336)
+- Fix relocating certificate paths to /etc/rhsm-host (RHEL-21335)
+
 * Mon Aug 09 2021 Mohan Boddu <mboddu@redhat.com> - 0.0.3-7
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
   Related: rhbz#1991688
