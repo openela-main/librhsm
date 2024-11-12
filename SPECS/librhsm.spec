@@ -1,6 +1,6 @@
 Name:           librhsm
 Version:        0.0.3
-Release:        7%{?dist}.1
+Release:        9%{?dist}
 Summary:        Red Hat Subscription Manager library
 
 License:        LGPLv2+
@@ -13,6 +13,7 @@ Patch0002:      0002-Generate-repofile-for-any-architecture-if-ALL-is-spe.patch
 Patch0003:      0003-Enable-repos-when-generating-a-.repo-file-based-on-e.patch
 Patch0004:      0004-Append-ctx_baseurl-prefix-to-gpg_url-RhBug-1708628.patch
 Patch0005:      0005-Fix-relocating-certificate-paths-to-etc-rhsm-host.patch
+Patch0006:      0006-Refactor-parse_entitlement_data.patch
 
 BuildRequires:  meson >= 0.37.0
 BuildRequires:  gcc
@@ -53,9 +54,12 @@ Requires:       %{name}%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
-* Tue Nov 21 2023 Petr Pisar <ppisar@redhat.com> - 0.0.3-7.1
-- Correct a License tag to LGPLv2+ (RHEL-21336)
-- Fix relocating certificate paths to /etc/rhsm-host (RHEL-21335)
+* Wed Apr 10 2024 Petr Pisar <ppisar@redhat.com> - 0.0.3-9
+- Fix memory leaks in parse_entitlement_data() (RHEL-25499)
+
+* Tue Nov 21 2023 Petr Pisar <ppisar@redhat.com> - 0.0.3-8
+- Correct a License tag to LGPLv2+ (RHEL-16103)
+- Fix relocating certificate paths to /etc/rhsm-host (RHEL-14224)
 
 * Mon Aug 09 2021 Mohan Boddu <mboddu@redhat.com> - 0.0.3-7
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
