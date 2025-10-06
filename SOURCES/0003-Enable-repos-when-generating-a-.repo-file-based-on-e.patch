@@ -1,0 +1,40 @@
+From 55e2f2d64372043e2fab96461243d808326bc902 Mon Sep 17 00:00:00 2001
+From: Daniel Mach <dmach@redhat.com>
+Date: Tue, 13 Nov 2018 12:17:58 +0100
+Subject: [PATCH 3/4] Enable repos when generating a .repo file based on
+ entitlement certificate.
+
+Resolves: rhbz#1638850
+---
+ rhsm/rhsm-utils.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/rhsm/rhsm-utils.c b/rhsm/rhsm-utils.c
+index b52a2b81f3c2ba2f881d7f1746d9e0c0b15ab189..6708a43a93f850f873a216d6f20aca8b7bd3225e 100644
+--- a/rhsm/rhsm-utils.c
++++ b/rhsm/rhsm-utils.c
+@@ -245,13 +245,20 @@ rhsm_utils_yum_repo_from_context (RHSMContext *ctx)
+ 
+           /* Now we have only available repos */
+           const gchar *id = json_object_get_string_member (repo, "label");
+           const gchar *name = json_object_get_string_member (repo, "name");
+           const gchar *path = json_object_get_string_member (repo, "path");
+-          gboolean enabled = FALSE;
++
++          /*
++           * The "enabled" option defaults to "true".
++           * If a content (repository) is enabled, the option is missing in the data,
++           * most likely to save limited space in the certificate.
++           */
++          gboolean enabled = TRUE;
+           if (json_object_has_member (repo, "enabled"))
+             enabled = json_object_get_boolean_member (repo, "enabled");
++
+           if (id == NULL || name == NULL || path == NULL)
+             continue; /* TODO: make some error reporting here */
+ 
+           /* Clashing repositories */
+           if (g_key_file_has_group (repofile, id))
+-- 
+2.26.2
+

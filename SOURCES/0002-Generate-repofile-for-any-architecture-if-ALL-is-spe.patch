@@ -1,0 +1,35 @@
+From e215c12da9b74dbe85e2ca6555fd10b5b02778d5 Mon Sep 17 00:00:00 2001
+From: Pavla Kratochvilova <pkratoch@redhat.com>
+Date: Wed, 20 Mar 2019 18:45:16 +0100
+Subject: [PATCH 2/4] Generate repofile for any architecture if "ALL" is
+ specified (RhBug:1645318)
+
+The "arches" array can contain special value "ALL" and in that case any
+architecture should be accepted.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1645318
+---
+ rhsm/rhsm-utils.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/rhsm/rhsm-utils.c b/rhsm/rhsm-utils.c
+index 06b12fca7fe366f42f0daa1e77c275c3a8e9375c..b52a2b81f3c2ba2f881d7f1746d9e0c0b15ab189 100644
+--- a/rhsm/rhsm-utils.c
++++ b/rhsm/rhsm-utils.c
+@@ -228,11 +228,12 @@ rhsm_utils_yum_repo_from_context (RHSMContext *ctx)
+ 
+           /* Filter by arches vs context one */
+           if (json_object_has_member (repo, "arches"))
+             {
+               JsonArray *arr = json_object_get_array_member (repo, "arches");
+-              if (!rhsm_json_array_contains_string (arr, ctx_arch))
++              if (!rhsm_json_array_contains_string (arr, ctx_arch)
++                && !rhsm_json_array_contains_string (arr, "ALL"))
+                 continue;
+             }
+ 
+           /* Filter by required tags vs available tags */
+           if (json_object_has_member (repo, "required_tags"))
+-- 
+2.26.2
+

@@ -1,0 +1,37 @@
+From 5e0674cf389f14174208641ec411ba7be448d5e3 Mon Sep 17 00:00:00 2001
+From: Marek Blaha <mblaha@redhat.com>
+Date: Fri, 18 Jun 2021 07:48:16 +0200
+Subject: [PATCH] Refactor parse_entitlement_data()
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This change is meant to silence alerts from static code analysis. It
+also makes the *ent variable freeing slightly more clear.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ rhsm/rhsm-entitlement-certificate.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/rhsm/rhsm-entitlement-certificate.c b/rhsm/rhsm-entitlement-certificate.c
+index 5d37732..aa4dd7e 100644
+--- a/rhsm/rhsm-entitlement-certificate.c
++++ b/rhsm/rhsm-entitlement-certificate.c
+@@ -140,11 +140,11 @@ parse_entitlement_data (const gchar  *data,
+     }
+ 
+   gsize hlen = strlen (ENTITLEMENT_DATA_HEADER);
+-  gchar *ent = g_strndup (start + hlen, end - start - hlen);
++  g_autofree gchar *ent = g_strndup (start + hlen, end - start - hlen);
+ 
+   gsize zlen = 0;
+   guchar *zdata = g_base64_decode_inplace (ent, &zlen);
+-  g_autoptr(GInputStream) zstream = g_memory_input_stream_new_from_data (zdata, zlen, g_free);
++  g_autoptr(GInputStream) zstream = g_memory_input_stream_new_from_data (zdata, zlen, NULL);
+   g_autoptr(GZlibDecompressor) decompressor = g_zlib_decompressor_new (G_ZLIB_COMPRESSOR_FORMAT_ZLIB);
+   g_autoptr(GInputStream) cstream = g_converter_input_stream_new (zstream, G_CONVERTER (decompressor));
+   g_autoptr(JsonParser) parser = json_parser_new_immutable ();
+-- 
+2.45.1
+

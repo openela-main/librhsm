@@ -1,0 +1,54 @@
+From fcd972cbe7c8a3907ba9f091cd082b1090231492 Mon Sep 17 00:00:00 2001
+From: Jiri Hnidek <jhnidek@redhat.com>
+Date: Thu, 1 Oct 2020 11:47:24 +0200
+Subject: [PATCH] Added some instruction for building librhsm.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ README.md | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+diff --git a/README.md b/README.md
+index 74a2c45..9f185be 100644
+--- a/README.md
++++ b/README.md
+@@ -5,3 +5,32 @@ Known limitations:
+ 
+ * Entitlement certificates v1 are not supported
+ * Multiple products in one product certificate are not supported
++
++Requirements
++------------
++
++Following tools and libraries are required to be able to build librhsm library:
++
++* meson (at least 0.37.0)
++* ninja
++* gcc
++* pkg-config
++* glib-2.0 (at least 2.44)
++* gobject-2.0 (at least 2.44)
++* gio-2.0 (at least 2.44)
++* json-glib-1.0 (at least 1.2)
++* openssl
++
++Installation
++------------
++
++When required tools and libraries are installed, then it is possible to build
++librhsm using following steps:
++
++
++```
++$ mkdir ../librhsm_build
++$ meson ../librhsm_build
++$ cd ../librhsm_build
++$ ninja-build
++```
+\ No newline at end of file
+-- 
+2.45.1
+

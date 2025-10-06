@@ -1,0 +1,35 @@
+From e8ea9f09f4ec718c42b1909e21369a9487ed5f4b Mon Sep 17 00:00:00 2001
+From: Jaroslav Mracek <jmracek@redhat.com>
+Date: Tue, 13 Nov 2018 18:31:57 +0100
+Subject: [PATCH 1/4] Replace bool option with int to generate repo files
+
+During the testing of subscription manager it was discovered that
+subscription manager detects disabled repository by test if key
+"enabled == 0". It means that enabled=false was detected as enabled
+repository. I know that the issue is in subscription manager, but
+keeping the patch is not harmful because the 0/1 is also valid
+combination like false/true.
+---
+ rhsm/rhsm-utils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rhsm/rhsm-utils.c b/rhsm/rhsm-utils.c
+index 7b6a26b305515c53e10b9cecb9f95b2e9d84ad02..06b12fca7fe366f42f0daa1e77c275c3a8e9375c 100644
+--- a/rhsm/rhsm-utils.c
++++ b/rhsm/rhsm-utils.c
+@@ -260,11 +260,11 @@ rhsm_utils_yum_repo_from_context (RHSMContext *ctx)
+             }
+ 
+           g_autofree gchar *baseurl = g_strconcat (ctx_baseurl, path, NULL);
+           g_key_file_set_string (repofile, id, "name", name);
+           g_key_file_set_string (repofile, id, "baseurl", baseurl);
+-          g_key_file_set_boolean (repofile, id, "enabled", enabled);
++          g_key_file_set_integer (repofile, id, "enabled", enabled ? 1 : 0);
+ 
+           if (json_object_has_member (repo, "gpg_url"))
+             {
+               const gchar *gpg_url = json_object_get_string_member (repo, "gpg_url");
+               g_key_file_set_string (repofile, id, "gpgkey", gpg_url);
+-- 
+2.26.2
+
